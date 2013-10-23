@@ -862,7 +862,10 @@ def main():
     grid_spacing = []
     for l in grid_spacing_file.readlines():
         mass_point = l.strip('\n').split()
-        grid_spacing.append( {'c1n2':mass_point[0], 'n1':mass_point[1]} )
+        grid_spacing.append( { 'c1n2':float(mass_point[0])
+                             , 'n1':float(mass_point[1])
+                             }
+                           )
     print grid_spacing
     for gs in grid_spacing:
         m_c1n2 = gs['c1n2']
