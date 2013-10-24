@@ -1,14 +1,14 @@
 ## Herwig++ job option file for Susy 2-parton -> 2-sparticle processes
 
-# ## Get a handle on the top level algorithms' sequence
-# from AthenaCommon import Logging
-# log = Logging.logging.getLogger('Generate.SMModeCDG')
-# 
-# if not 'evgenConfig' in dir():
-#     raise RuntimeError('These jobOptions should be run through Generate_trf.py')
-# 
-# ## Setup Herwig++
-# include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
+## Get a handle on the top level algorithms' sequence
+from AthenaCommon import Logging
+log = Logging.logging.getLogger('Generate.SMModeCDG')
+
+if not 'evgenConfig' in dir():
+    raise RuntimeError('These jobOptions should be run through Generate_trf.py')
+
+## Setup Herwig++
+include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
 
 # define spectrum file name
 include ( 'Susy_simplifiedModel_wA_slep_noWcascade_mc12points.py' )
