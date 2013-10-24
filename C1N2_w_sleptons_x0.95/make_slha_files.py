@@ -10,7 +10,7 @@ def printSpectrumFile(m_c1n2, m_n1, x_slep):
     dir_name = getLabel(m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
-    out_file_name = '%s/susy_simplified_model_wC_sl_noWcascade.%s.slha' % (dir_name, dir_name)
+    out_file_name = '%s/susy_simplified_model_wA_sl_noWcascade.%s.slha' % (dir_name, dir_name)
     out_file = open(out_file_name, 'w')
 
     m_slep = x_slep*m_c1n2 + (1-x_slep)*m_n1
@@ -801,8 +801,7 @@ def printJobOptionsFile(m_c1n2, m_n1, x_slep):
     dir_name = getLabel(m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
-    out_file_name = '%s/MC12.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wC_slep_noWcascade.%s.py' % (dir_name, dir_name)
-    # out_file_name = '%s/susy_simplified_model_wC_sl_noWcascade.%s.slha' % (dir_name, dir_name)
+    out_file_name = '%s/MC12.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade.%s.py' % (dir_name, dir_name)
     out_file = open(out_file_name, 'w')
 
     out_file.write("""## Herwig++ job option file for Susy 2-parton -> 2-sparticle processes
@@ -819,7 +818,7 @@ include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
 
 # define spectrum file name
 """)
-    slha_file_name = 'susy_simplified_model_wC_sl_noWcascade.%s.slha' % dir_name
+    slha_file_name = 'susy_simplified_model_wA_sl_noWcascade.%s.slha' % dir_name
     out_file.write("slha_file = '%s'\n" % (slha_file_name))
 
     out_file.write("""# Add Herwig++ parameters for this process

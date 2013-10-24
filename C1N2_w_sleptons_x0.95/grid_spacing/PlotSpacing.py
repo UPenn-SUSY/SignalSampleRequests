@@ -21,8 +21,9 @@ def readFile(in_file_name):
         print l.split()
 
         # dsid = pieces[0]
-        mc1 = float(pieces[0])
-        mn0 = float(pieces[1])
+        run_num = int(pieces[0])
+        mc1 = float(pieces[1])
+        mn0 = float(pieces[2])
 
         input.append( { 'mc1':mc1
                       , 'mn0':mn0
