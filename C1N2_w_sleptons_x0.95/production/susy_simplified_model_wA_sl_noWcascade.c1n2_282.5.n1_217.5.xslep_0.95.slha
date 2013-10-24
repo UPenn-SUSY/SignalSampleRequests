@@ -1,21 +1,4 @@
-#!/usr/bin/env python
-
-import sys
-import os.path
-import optparse
-import time
-
-# ------------------------------------------------------------------------------
-def printSpectrumFile(m_c1n2, m_n1, x_slep):
-    dir_name = getLabel(m_c1n2, m_n1, x_slep)
-    checkDir(dir_name)
-
-    out_file_name = '%s/susy_simplified_model_wA_sl_noWcascade.%s.slha' % (dir_name, dir_name)
-    out_file = open(out_file_name, 'w')
-
-    m_slep = x_slep*m_c1n2 + (1-x_slep)*m_n1
-
-    out_file.write('''##******************************************************************
+##******************************************************************
 ##                      MadGraph/MadEvent                          *
 ##******************************************************************
 ##                                                                 *
@@ -95,24 +78,23 @@ BLOCK MASS  # Mass Spectrum
    2000005     5.43726676E+05   # ~b_2
    1000006     3.99668493E+05   # ~t_1
    2000006     5.85785818E+05   # ~t_2
-''')
-    out_file.write('   1000011	%f		# ~e_L\n' % m_slep)
-    out_file.write('   2000011     1.44102799E+05   # ~e_R\n')
-    out_file.write('   1000012	%f		# ~nu_eL\n' % m_slep)
-    out_file.write('   1000013	%f		# ~mu_L\n' % m_slep)
-    out_file.write('   2000013     1.44102799E+05   # ~mu_R\n')
-    out_file.write('   1000014	%f		# ~nu_muL\n' % m_slep)
-    out_file.write('   1000015	%f		# ~tau_1\n' % m_slep)
-    out_file.write('   2000015     2.06867805E+05   # ~tau_2\n')
-    out_file.write('   1000016	%f		# ~nu_tauL\n' % m_slep)
-    out_file.write('   1000021     6.07713704E+05   # ~g\n')
-    out_file.write('   1000022	%f   	# ~chi_10\n' % m_n1)
-    out_file.write('   1000023	%f		# ~chi_20\n' % m_c1n2)
-    out_file.write('   1000025     3.63756027E+05   # ~chi_30\n')
-    out_file.write('   1000035     3.81729382E+05   # ~chi_40\n')
-    out_file.write('   1000024	%f		# ~chi_1+\n' % m_c1n2)
-    out_file.write('   1000037     3.79939320E+05   # ~chi_2+\n')
-    out_file.write(''' #
+   1000011	279.250000		# ~e_L
+   2000011     1.44102799E+05   # ~e_R
+   1000012	279.250000		# ~nu_eL
+   1000013	279.250000		# ~mu_L
+   2000013     1.44102799E+05   # ~mu_R
+   1000014	279.250000		# ~nu_muL
+   1000015	279.250000		# ~tau_1
+   2000015     2.06867805E+05   # ~tau_2
+   1000016	279.250000		# ~nu_tauL
+   1000021     6.07713704E+05   # ~g
+   1000022	217.500000   	# ~chi_10
+   1000023	282.500000		# ~chi_20
+   1000025     3.63756027E+05   # ~chi_30
+   1000035     3.81729382E+05   # ~chi_40
+   1000024	282.500000		# ~chi_1+
+   1000037     3.79939320E+05   # ~chi_2+
+ #
 BLOCK NMIX  # Neutralino Mixing Matrix
   1  1     9.86364430E-01   # N_11
   1  2    -5.31103553E-02   # N_12
@@ -794,83 +776,3 @@ DECAY   1000035     2.58585079E+00   # neutralino4 decays
      2.53796547E-02    2    -1000014        14   # BR(~chi_40 -> ~nu_muL*  nu_mu )
      2.54724352E-02    2     1000016       -16   # BR(~chi_40 -> ~nu_tau1  nu_taub)
      2.54724352E-02    2    -1000016        16   # BR(~chi_40 -> ~nu_tau1* nu_tau )
-''')
-
-# ------------------------------------------------------------------------------
-def printJobOptionsFile(m_c1n2, m_n1, x_slep):
-    dir_name = getLabel(m_c1n2, m_n1, x_slep)
-    checkDir(dir_name)
-
-    out_file_name = '%s/MC12.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade.%s.py' % (dir_name, dir_name)
-    out_file = open(out_file_name, 'w')
-
-    out_file.write("""## Herwig++ job option file for Susy 2-parton -> 2-sparticle processes
-
-## Get a handle on the top level algorithms' sequence
-from AthenaCommon import Logging
-log = Logging.logging.getLogger('Generate.SMModeCDG')
-
-if not 'evgenConfig' in dir():
-    raise RuntimeError('These jobOptions should be run through Generate_trf.py')
-
-## Setup Herwig++
-include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
-
-# define spectrum file name
-""")
-    slha_file_name = 'susy_simplified_model_wA_sl_noWcascade.%s.slha' % dir_name
-    out_file.write("slha_file = '%s'\n" % (slha_file_name))
-
-    out_file.write("""# Add Herwig++ parameters for this process
-include ( 'MC12JobOptions/Herwigpp_SUSYConfig.py' )
-cmds = buildHerwigppCommands(['~chi_1+','~chi_20'],slha_file,'Exclusive')
-
-## Define metadata
-evgenConfig.description = 'Simplified Model Mode A grid generation for direct gaugino search...'
-evgenConfig.keywords    = ['SUSY','Direct Gaugino','Simplified Models','chargino','neutralino']
-evgenConfig.contact     = ['alaettin.serhan.mete@cern.ch']
-
-## Print checks
-log.info('*** Begin Herwig++ commands ***')
-log.info(cmds)
-log.info('*** End Herwig++ commands ***')
-
-## Set the command vector
-topAlg.Herwigpp.Commands += cmds.splitlines()
-
-## Clean up
-del cmds
-""")
-
-# ------------------------------------------------------------------------------
-def getLabel(m_c1n2, m_n1, x_slep):
-    label = 'c1n2_%s.n1_%s.xslep_%s' % (m_c1n2, m_n1, x_slep)
-    return label
-
-# ------------------------------------------------------------------------------
-def checkDir(dir_name):
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-
-# ------------------------------------------------------------------------------
-def main():
-    grid_spacing_file = file('grid_spacing/grid_spacing.txt')
-    x_slep = 0.95
-    grid_spacing = []
-    for l in grid_spacing_file.readlines():
-        mass_point = l.strip('\n').split()
-        grid_spacing.append( { 'c1n2':float(mass_point[1])
-                             , 'n1':float(mass_point[2])
-                             }
-                           )
-    print grid_spacing
-    for gs in grid_spacing:
-        m_c1n2 = gs['c1n2']
-        m_n1   = gs['n1']
-        print 'print spectrum and job options files for c1n2: %s - n1: %s' % (m_c1n2, m_n1)
-        printSpectrumFile(m_c1n2, m_n1, x_slep)
-        printJobOptionsFile(m_c1n2, m_n1, x_slep)
-
-# ==============================================================================
-if __name__ == '__main__':
-    main()

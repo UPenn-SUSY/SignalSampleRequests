@@ -11,7 +11,7 @@ if not 'evgenConfig' in dir():
 include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
 
 # define spectrum file name
-include ( '../Susy_simplifiedModel_wA_slep_noWcascade_mc12points.py' )
+include ( 'Susy_simplifiedModel_wA_slep_noWcascade_mc12points.py' )
 print 'run number: %d' % runArgs.runNumber
 try:
     (mc1,mn1) = pointdict[runArgs.runNumber]
