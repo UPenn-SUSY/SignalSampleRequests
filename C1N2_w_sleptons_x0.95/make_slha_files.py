@@ -12,7 +12,7 @@ def printSpectrumFile(run_num, m_c1n2, m_n1, x_slep):
     dir_name = getLabel(run_num, m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
-    out_file_name = '%s/susy_simplified_model_wA_sl_noWcascade.%s.slha' % (dir_name, dir_name)
+    out_file_name = '%s/susy_simplified_model_wA_sl_noWcascade_%s.slha' % (dir_name, dir_name)
     out_file = open(out_file_name, 'w')
 
     m_slep = x_slep*m_c1n2 + (1-x_slep)*m_n1
@@ -803,50 +803,61 @@ def printJobOptionsFile(run_num, m_c1n2, m_n1, x_slep):
     dir_name = getLabel(run_num, m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
-    out_file_name = '%s/MC12.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade.%s.py' % (dir_name, dir_name)
+    out_file_name = '%s/Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_%s.py' % (dir_name, dir_name)
     out_file = open(out_file_name, 'w')
 
-    out_file.write("""## Herwig++ job option file for Susy 2-parton -> 2-sparticle processes
+    out_file.write("include('Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_xslep_95.py')\n")
+    out_file.close()
 
-## Get a handle on the top level algorithms' sequence
-from AthenaCommon import Logging
-log = Logging.logging.getLogger('Generate.SMModeCDG')
-
-if not 'evgenConfig' in dir():
-    raise RuntimeError('These jobOptions should be run through Generate_trf.py')
-
-## Setup Herwig++
-include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
-
-# define spectrum file name
-""")
-    slha_file_name = 'susy_simplified_model_wA_sl_noWcascade.%s.slha' % dir_name
-    out_file.write("slha_file = '%s'\n" % (slha_file_name))
-
-    out_file.write("""# Add Herwig++ parameters for this process
-include ( 'MC12JobOptions/Herwigpp_SUSYConfig.py' )
-cmds = buildHerwigppCommands(['~chi_1+','~chi_20'],slha_file,'Exclusive')
-
-## Define metadata
-evgenConfig.description = 'Simplified Model Mode A grid generation for direct gaugino search...'
-evgenConfig.keywords    = ['SUSY','Direct Gaugino','Simplified Models','chargino','neutralino']
-evgenConfig.contact     = ['alaettin.serhan.mete@cern.ch']
-
-## Print checks
-log.info('*** Begin Herwig++ commands ***')
-log.info(cmds)
-log.info('*** End Herwig++ commands ***')
-
-## Set the command vector
-topAlg.Herwigpp.Commands += cmds.splitlines()
-
-## Clean up
-del cmds
-""")
+###     out_file.write("""## Herwig++ job option file for Susy 2-parton -> 2-sparticle processes
+### 
+### ## Get a handle on the top level algorithms' sequence
+### from AthenaCommon import Logging
+### log = Logging.logging.getLogger('Generate.SMModeCDG')
+### 
+### if not 'evgenConfig' in dir():
+###     raise RuntimeError('These jobOptions should be run through Generate_trf.py')
+### 
+### ## Setup Herwig++
+### include ( 'MC12JobOptions/Herwigpp_UEEE3_CTEQ6L1_Common.py' )
+### 
+### # define spectrum file name
+### """)
+###     slha_file_name = 'susy_simplified_model_wA_sl_noWcascade_%s.slha' % dir_name
+###     out_file.write("slha_file = '%s'\n" % (slha_file_name))
+### 
+###     out_file.write("""# Add Herwig++ parameters for this process
+### include ( 'MC12JobOptions/Herwigpp_SUSYConfig.py' )
+### cmds = buildHerwigppCommands(['~chi_1+','~chi_20'],slha_file,'Exclusive')
+### 
+### ## Define metadata
+### evgenConfig.description = 'Simplified Model Mode A grid generation for direct gaugino search...'
+### evgenConfig.keywords    = ['SUSY','Direct Gaugino','Simplified Models','chargino','neutralino']
+### evgenConfig.contact     = ['alaettin.serhan.mete@cern.ch']
+### 
+### ## Print checks
+### log.info('*** Begin Herwig++ commands ***')
+### log.info(cmds)
+### log.info('*** End Herwig++ commands ***')
+### 
+### ## Set the command vector
+### topAlg.Herwigpp.Commands += cmds.splitlines()
+### 
+### ## Clean up
+### del cmds
+### """)
 
 # ------------------------------------------------------------------------------
 def getLabel(run_num, m_c1n2, m_n1, x_slep):
-    label = '%s.c1n2_%s.n1_%s.xslep_%s' % (run_num, m_c1n2, m_n1, x_slep)
+    x_slep_label = str(x_slep).replace('.','_')
+    m_c1n2_label = str(m_c1n2).replace('.','_')
+    m_n1_label   = str(m_n1  ).replace('.','_')
+
+    label = '%s_c1n2_%s_n1_%s_xslep_%s' % ( run_num
+                                          , m_c1n2_label
+                                          , m_n1_label
+                                          , x_slep_label
+                                          )
     return label
 
 # ------------------------------------------------------------------------------
@@ -866,13 +877,6 @@ def main():
                              , 'n1':   m_n1
                              }
                            )
-    # for l in grid_spacing_file.readlines():
-    #     mass_point = l.strip('\n').split()
-    #     grid_spacing.append( { 'run_num':mass_point[0]
-    #                          , 'c1n2':float(mass_point[1])
-    #                          , 'n1':float(mass_point[2])
-    #                          }
-    #                        )
     print grid_spacing
     for gs in grid_spacing:
         run_num = gs['run_num']
