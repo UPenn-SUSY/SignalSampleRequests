@@ -803,7 +803,6 @@ def printJobOptionsFile(run_num, m_c1n2, m_n1, x_slep):
     dir_name = getLabel(run_num, m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
-    out_file_name = '%s/Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_%s.py' % (dir_name, dir_name)
     out_file_name = '%s/MC12.%s.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_c1n2_%s_n1_%s_xslep_0_95.py' % (dir_name, run_num, intToString(m_c1n2), intToString(m_n1))
     out_file = open(out_file_name, 'w')
 
@@ -887,7 +886,7 @@ def main():
                              , 'n1':   m_n1
                              }
                            )
-        break
+        # break
     print grid_spacing
     for gs in grid_spacing:
         run_num = gs['run_num']
