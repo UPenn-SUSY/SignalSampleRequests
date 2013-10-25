@@ -804,9 +804,11 @@ def printJobOptionsFile(run_num, m_c1n2, m_n1, x_slep):
     checkDir(dir_name)
 
     out_file_name = '%s/Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_%s.py' % (dir_name, dir_name)
+    out_file_name = '%s/MC12.%s.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_c1n2_%s_n1_%s_xslep_0_95.py' % (dir_name, run_num, intToString(m_c1n2), intToString(m_n1))
     out_file = open(out_file_name, 'w')
 
-    out_file.write("include('Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_xslep_95.py')\n")
+    # out_file.write("include('Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_xslep_95.py')\n")
+    out_file.write("include('Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade_c1n2_X_n1_Y_xslep_0_95.py')\n")
     out_file.close()
 
 ###     out_file.write("""## Herwig++ job option file for Susy 2-parton -> 2-sparticle processes
@@ -848,10 +850,18 @@ def printJobOptionsFile(run_num, m_c1n2, m_n1, x_slep):
 ### """)
 
 # ------------------------------------------------------------------------------
+def intToString(i):
+    return str(i).replace('.','_')
+
+# ------------------------------------------------------------------------------
 def getLabel(run_num, m_c1n2, m_n1, x_slep):
-    x_slep_label = str(x_slep).replace('.','_')
-    m_c1n2_label = str(m_c1n2).replace('.','_')
-    m_n1_label   = str(m_n1  ).replace('.','_')
+    # x_slep_label = str(x_slep).replace('.','_')
+    # m_c1n2_label = str(m_c1n2).replace('.','_')
+    # m_n1_label   = str(m_n1  ).replace('.','_')
+
+    x_slep_label = intToString(x_slep)
+    m_c1n2_label = intToString(m_c1n2)
+    m_n1_label   = intToString(m_n1  )
 
     label = '%s_c1n2_%s_n1_%s_xslep_%s' % ( run_num
                                           , m_c1n2_label
@@ -877,6 +887,7 @@ def main():
                              , 'n1':   m_n1
                              }
                            )
+        break
     print grid_spacing
     for gs in grid_spacing:
         run_num = gs['run_num']

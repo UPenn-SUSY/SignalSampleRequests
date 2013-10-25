@@ -15,9 +15,12 @@ include ( 'Susy_simplifiedModel_wA_slep_noWcascade_mc12points.py' )
 print 'run number: %d' % runArgs.runNumber
 try:
     (mc1,mn1) = pointdict[runArgs.runNumber]
+    mc1 = str(mc1).replace('.','_')
+    mn1 = str(mn1).replace('.','_')
 except:
     raise RuntimeError('DSID %d not found in grid point dictionary. Aborting!' % runArgs.runNumber)
-slha_file = 'susy_simplified_model_wA_sl_noWcascade.c1n2_%s.n1_%s.xslep_0.95.slha' % (mc1, mn1)
+# slha_file = 'susy_simplified_model_wA_sl_noWcascade.c1n2_%s.n1_%s.xslep_0_95.slha' % (mc1, mn1)
+slha_file = 'susy_simplified_model_wA_sl_noWcascade_%s_c1n2_%s_n1_%s_xslep_0_95.slha' % (runArgs.runNumber, mc1, mn1)
 print 'mc1: %s' % mc1
 print 'mn1: %s' % mn1
 print 'slha_file: %s' % slha_file
