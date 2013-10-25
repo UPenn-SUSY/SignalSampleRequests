@@ -5,9 +5,11 @@ import os.path
 import optparse
 import time
 
+from Susy_simplifiedModel_wA_slep_noWcascade_mc12points import pointdict
+
 # ------------------------------------------------------------------------------
-def printSpectrumFile(m_c1n2, m_n1, x_slep):
-    dir_name = getLabel(m_c1n2, m_n1, x_slep)
+def printSpectrumFile(run_num, m_c1n2, m_n1, x_slep):
+    dir_name = getLabel(run_num, m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
     out_file_name = '%s/susy_simplified_model_wA_sl_noWcascade.%s.slha' % (dir_name, dir_name)
@@ -797,8 +799,8 @@ DECAY   1000035     2.58585079E+00   # neutralino4 decays
 ''')
 
 # ------------------------------------------------------------------------------
-def printJobOptionsFile(m_c1n2, m_n1, x_slep):
-    dir_name = getLabel(m_c1n2, m_n1, x_slep)
+def printJobOptionsFile(run_num, m_c1n2, m_n1, x_slep):
+    dir_name = getLabel(run_num, m_c1n2, m_n1, x_slep)
     checkDir(dir_name)
 
     out_file_name = '%s/MC12.Herwigpp_UEEE3_CTEQ6L1_simplifiedModel_wA_slep_noWcascade.%s.py' % (dir_name, dir_name)
@@ -843,8 +845,8 @@ del cmds
 """)
 
 # ------------------------------------------------------------------------------
-def getLabel(m_c1n2, m_n1, x_slep):
-    label = 'c1n2_%s.n1_%s.xslep_%s' % (m_c1n2, m_n1, x_slep)
+def getLabel(run_num, m_c1n2, m_n1, x_slep):
+    label = '%s.c1n2_%s.n1_%s.xslep_%s' % (run_num, m_c1n2, m_n1, x_slep)
     return label
 
 # ------------------------------------------------------------------------------
@@ -857,19 +859,28 @@ def main():
     grid_spacing_file = file('grid_spacing/grid_spacing.txt')
     x_slep = 0.95
     grid_spacing = []
-    for l in grid_spacing_file.readlines():
-        mass_point = l.strip('\n').split()
-        grid_spacing.append( { 'c1n2':float(mass_point[1])
-                             , 'n1':float(mass_point[2])
+    for dsid in pointdict:
+        (m_c1n2, m_n1) = pointdict[dsid]
+        grid_spacing.append( { 'run_num':dsid
+                             , 'c1n2': m_c1n2
+                             , 'n1':   m_n1
                              }
                            )
+    # for l in grid_spacing_file.readlines():
+    #     mass_point = l.strip('\n').split()
+    #     grid_spacing.append( { 'run_num':mass_point[0]
+    #                          , 'c1n2':float(mass_point[1])
+    #                          , 'n1':float(mass_point[2])
+    #                          }
+    #                        )
     print grid_spacing
     for gs in grid_spacing:
-        m_c1n2 = gs['c1n2']
-        m_n1   = gs['n1']
+        run_num = gs['run_num']
+        m_c1n2  = gs['c1n2']
+        m_n1    = gs['n1']
         print 'print spectrum and job options files for c1n2: %s - n1: %s' % (m_c1n2, m_n1)
-        printSpectrumFile(m_c1n2, m_n1, x_slep)
-        printJobOptionsFile(m_c1n2, m_n1, x_slep)
+        printSpectrumFile(run_num, m_c1n2, m_n1, x_slep)
+        printJobOptionsFile(run_num, m_c1n2, m_n1, x_slep)
 
 # ==============================================================================
 if __name__ == '__main__':
